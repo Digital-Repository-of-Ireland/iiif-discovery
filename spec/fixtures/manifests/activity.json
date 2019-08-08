@@ -1,0 +1,22 @@
+{
+  "id": "https://example.org/activity/1",
+  "type": "Update",
+  "summary": "admin updated the manifest, fixing reported bug #15.",
+  "object": {
+    "id": "https://example.org/iiif/1/manifest",
+    "type": "Manifest",
+    "seeAlso": [
+      {
+        "id": "https://example.org/dataset/single-item.jsonld",
+        "type": "Dataset",
+        "format": "application/ld+json"
+      }
+    ]
+  },
+  "endTime": "2017-09-21T00:00:00Z",
+  "startTime": "2017-09-20T23:58:00Z",
+  "actor": {
+    "id": "https://example.org/person/admin1",
+    "type": "Person"
+  }
+}

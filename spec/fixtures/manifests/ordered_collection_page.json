@@ -1,0 +1,28 @@
+{
+  "@context": "http://iiif.io/api/discovery/0/context.json",
+  "id": "https://example.org/activity/page-1",
+  "type": "OrderedCollectionPage",
+  "startIndex": 20,
+  "partOf": {
+    "id": "https://example.org/activity/all-changes",
+    "type": "OrderedCollection"
+  },
+  "prev": {
+    "id": "https://example.org/activity/page-0",
+    "type": "OrderedCollectionPage"
+  },
+  "next": {
+    "id": "https://example.org/activity/page-2",
+    "type": "OrderedCollectionPage"
+  },
+  "orderedItems": [
+    {
+      "type": "Update",
+      "object": {
+        "id": "https://example.org/iiif/1/manifest",
+        "type": "Manifest"
+      },
+      "endTime": "2018-03-10T10:00:00Z"
+    }
+  ]
+}

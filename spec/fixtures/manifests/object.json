@@ -1,0 +1,13 @@
+{
+  "object": {
+    "id": "http://example.org/iiif/1/manifest",
+    "type": "Manifest",
+    "seeAlso": [
+      {
+        "id": "https://example.org/dataset/single-item.jsonld",
+        "type": "Dataset",
+        "format": "application/ld+json"
+      }
+    ]
+  }
+}

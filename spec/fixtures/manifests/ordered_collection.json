@@ -1,0 +1,27 @@
+{
+  "@context": "http://iiif.io/api/discovery/0/context.json",
+  "id": "https://example.org/activity/all-changes",
+  "type": "OrderedCollection",
+  "totalItems": 21456,
+  "seeAlso": [
+    {
+      "id": "https://example.org/dataset/all-dcat.jsonld",
+      "type": "Dataset",
+      "format": "application/ld+json"
+    }
+  ],
+  "partOf": [
+    {
+      "id": "https://example.org/aggregated-changes",
+      "type": "OrderedCollection"
+    }
+  ],
+  "first": {
+    "id": "https://example.org/activity/page-0",
+    "type": "OrderedCollectionPage"
+  },
+  "last": {
+    "id": "https://example.org/activity/page-214",
+    "type": "OrderedCollectionPage"
+  }
+}
