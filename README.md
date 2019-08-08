@@ -1,4 +1,4 @@
-# iiif-discovery: A Ruby API for working with IIIF Discovery manifests
+# iiif-discovery: A Ruby API for working with IIIF Discovery Activity Streams
 
 This is based on the [osullivan gem](https://github.com/iiif-prezi/osullivan) written by Jon Stroop.
 
