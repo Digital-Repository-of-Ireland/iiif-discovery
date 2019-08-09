@@ -15,7 +15,7 @@ module IIIF
       end
 
       def string_only_keys
-        %w{ } # should any of the any_type_keys be here?
+        %w{ id } # should any of the any_type_keys be here?
       end
 
       def array_only_keys
@@ -32,6 +32,10 @@ module IIIF
 
       def int_only_keys
         %w{ }
+      end
+
+      def type_only_keys
+        {}
       end
 
       # Initialize a Discovery node

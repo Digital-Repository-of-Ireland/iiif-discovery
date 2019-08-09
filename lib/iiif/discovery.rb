@@ -1,8 +1,13 @@
 %w{
+validate
 abstract_resource
   ordered_collection
+    see_also
+    part_of
+    page
   ordered_collection_page
     activity
+      actor
       object
 }.each do |f|
   require File.join(File.dirname(__FILE__), 'discovery', f)

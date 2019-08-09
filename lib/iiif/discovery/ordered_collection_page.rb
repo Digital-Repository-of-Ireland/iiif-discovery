@@ -8,24 +8,20 @@ module IIIF
         super + %w{ id type ordered_items }
       end
 
-      def string_only_keys
-        super + %w{ id }
-      end
-
       def array_only_keys
         super + %w{ ordered_items }
-      end
-
-      def hash_only_keys
-        super + %w{ part_of next prev }
       end
 
       def int_only_keys
         %w{ start_index }
       end
 
-      def plain_hash_keys
-        %w{ part_of next prev }
+      def type_only_keys
+        {
+          'part_of' => IIIF::Discovery::PartOf,
+          'next' => IIIF::Discovery::Page,
+          'prev' => IIIF::Discovery::Page
+        }
       end
 
       def initialize(hsh={})
@@ -35,6 +31,11 @@ module IIIF
 
       def validate
         super
+
+        unless Validate.id(id)
+          m = "id must be an HTTP(S) URL"
+          raise IIIF::Discovery::IllegalValueError, m
+        end
       end
 
     end

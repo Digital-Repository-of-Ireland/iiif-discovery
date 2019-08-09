@@ -84,6 +84,11 @@ describe IIIF::Discovery::Service do
       parsed = described_class.from_ordered_hash(fixture)
       expect(parsed['some_other_thing'].class).to be expected_klass
     end
+    it 'turns keys with given type into the type' do
+      expected_klass = IIIF::Discovery::Page
+      parsed = described_class.from_ordered_hash(fixture)
+      expect(parsed['prev'].class).to be expected_klass
+    end
 
     it 'round-trips' do
       fp = '/tmp/discovery-spec.json'

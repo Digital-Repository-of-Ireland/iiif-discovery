@@ -1,27 +1,13 @@
 module IIIF
   module Discovery
-    class Activity < AbstractResource
-
-      TYPE = %w(Update Create Delete)
+    class PartOf < AbstractResource
 
       def required_keys
-        super + %w{ type object }
-      end
-
-      def any_type_keys
-        super + %w{ object }
-      end
-
-      def string_only_keys
-        super + %w{ type end_time start_time summary }
-      end
-
-      def array_only_keys
-        super + %w{ ordered_items }
+        super + %w{ id type }
       end
 
       def initialize(hsh={})
-        hsh['type'] = TYPE.first unless hsh.has_key? 'type'
+        hsh['type'] = 'OrderedCollectionPage'
         super(hsh)
       end
 

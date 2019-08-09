@@ -39,11 +39,10 @@ object.id = 'https://example.org/iiif/1/manifest'
 
 # ...but there are also accessors and mutators for the properties mentioned in
 # the spec
-object.see_also << {
-      id: "https://example.org/dataset/single-item.jsonld",
-      type: "Dataset",
-      format: "application/json"
- }
+object.see_also << IIIF::Discovery::SeeAlso.new(
+                     'id' => "https://example.org/dataset/single-item.jsonld",
+                     'format' => "application/json"
+                   )
 activity.object = object
 
 puts activity.to_json(pretty: true)

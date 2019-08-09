@@ -8,11 +8,12 @@ module IIIF
   module Discovery
     class Service < IIIF::Service
 
-      def plain_hash_keys; %w{ }; end
+      def type_only_keys; {}; end
 
       def initialize(hsh={})
         super
         self.define_methods_for_hash_only_keys
+        self.define_methods_for_type_only_keys
         self.snakeize_keys
       end
 
@@ -54,32 +55,52 @@ module IIIF
         end
       end
 
-      def self.from_ordered_hash(hsh, default_klass=IIIF::OrderedHash, force_default_class=false)
+      def self.from_ordered_hash(hsh, default_klass=IIIF::OrderedHash, force_default_klass=false)
         # Create a new object (new_object)
         type = nil
-        if hsh.has_key?('type')
-          type = IIIF::Discovery::Service.get_descendant_class_by_jld_type(hsh['type'])
+
+        if force_default_klass
+          type = default_klass
+        else
+          if hsh.has_key?('type')
+            type = IIIF::Discovery::Service.get_descendant_class_by_jld_type(hsh['type'])
+          end
         end
-        new_object = type.nil? || force_default_class ? default_klass.new : type.new
+        new_object = type.nil? ? default_klass.new : type.new
 
         hsh.keys.each do |key|
           new_key = key.underscore == key ? key : key.underscore
+
           if hsh[key].kind_of?(Hash)
-            new_object[new_key] = if new_object.plain_hash_keys.include?(new_key)
-                                    IIIF::Discovery::Service.from_ordered_hash(hsh[key], IIIF::OrderedHash, true)
+            new_object[new_key] = if new_object.type_only_keys.key?(new_key)
+                                    IIIF::Discovery::Service.from_ordered_hash(
+                                      hsh[key],
+                                      new_object.type_only_keys[new_key],
+                                      true
+                                    )
                                   else
                                     IIIF::Discovery::Service.from_ordered_hash(hsh[key])
                                   end
+
           elsif hsh[key].kind_of?(Array)
             new_object[new_key] = []
             hsh[key].each do |member|
               if member.kind_of?(Hash)
-                new_object[new_key] << IIIF::Discovery::Service.from_ordered_hash(member)
+                new_object[new_key] << if new_object.type_only_keys.key?(new_key)
+                                         IIIF::Discovery::Service.from_ordered_hash(
+                                           member,
+                                           new_object.type_only_keys[new_key],
+                                           true
+                                         )
+                                       else
+                                         IIIF::Discovery::Service.from_ordered_hash(member)
+                                       end
               else
                 new_object[new_key] << member
                 # Again, no nested arrays, right?
               end
             end
+
           else
             new_object[new_key] = hsh[key]
           end
@@ -88,6 +109,29 @@ module IIIF
       end
 
       protected
+
+      def define_methods_for_type_only_keys
+        type_only_keys.keys.each do |key|
+          # Setters
+          define_singleton_method("#{key}=") do |arg|
+            self.send('[]=', key, arg)
+          end
+          if key.camelize(:lower) != key
+            define_singleton_method("#{key.camelize(:lower)}=") do |arg|
+              self.send('[]=', key, arg)
+            end
+          end
+          # Getters
+          define_singleton_method(key) do
+            self.send('[]', key)
+          end
+          if key.camelize(:lower) != key
+            define_singleton_method(key.camelize(:lower)) do
+              self.send('[]', key)
+            end
+          end
+        end
+      end
 
       def define_methods_for_array_only_keys
         array_only_keys.each do |key|

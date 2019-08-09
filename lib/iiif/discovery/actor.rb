@@ -1,19 +1,15 @@
 module IIIF
   module Discovery
-    class Object < AbstractResource
+    class Actor < AbstractResource
 
-      TYPE = %w(Manifest Collection)
+      TYPE = %w(Application Organisation Person)
 
       def required_keys
         super + %w{ id type }
       end
 
       def string_only_keys
-        super + %w{ type }
-      end
-
-      def array_only_keys
-        super + %w{ see_also }
+        super + %w{ format }
       end
 
       def initialize(hsh={})
@@ -23,11 +19,6 @@ module IIIF
 
       def validate
         super
-
-        unless Validate.id(id)
-          m = "id must be an HTTP(S) URL"
-          raise IIIF::Discovery::IllegalValueError, m
-        end
       end
 
       def to_ordered_hash(opts={})
