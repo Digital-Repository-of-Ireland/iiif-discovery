@@ -88,6 +88,12 @@ describe IIIF::Discovery::Service do
       expected_klass = IIIF::Discovery::Page
       parsed = described_class.from_ordered_hash(fixture)
       expect(parsed['prev'].class).to be expected_klass
+      expect(parsed['prev'].id).to eq 'https://example.org/activity/page-0'
+
+      expected_klass = IIIF::Discovery::PartOf
+      parsed = described_class.from_ordered_hash(fixture)
+      expect(parsed['part_of'].class).to be expected_klass
+      expect(parsed['part_of'].id).to eq 'https://example.org/activity/all-changes'
     end
 
     it 'round-trips' do

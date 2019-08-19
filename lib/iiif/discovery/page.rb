@@ -16,7 +16,8 @@ module IIIF
 
         unless self.id.nil? || self.id.empty?
           valid, m = Validate.id(self.id)
-          raise(IIIF::Discovery::IllegalValueError, m) unless valid
+          raise IIIF::Discovery::IllegalValueError, m unless valid
+          raise IIIF::Discovery::IllegalValueError, 'type must be OrderedCollectionPage' unless self['type'] == 'OrderedCollectionPage'
         end
       end
 

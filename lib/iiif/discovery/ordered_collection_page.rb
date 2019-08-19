@@ -18,6 +18,7 @@ module IIIF
 
       def type_only_keys
         {
+          'ordered_items' => IIIF::Discovery::Activity,
           'part_of' => IIIF::Discovery::PartOf,
           'next' => IIIF::Discovery::Page,
           'prev' => IIIF::Discovery::Page

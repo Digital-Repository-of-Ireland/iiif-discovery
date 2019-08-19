@@ -20,10 +20,9 @@ module IIIF
       def validate
         super
 
-        unless self.id.nil? || self.id.empty?
-          valid, m = Validate.id(self.id)
-          raise(IIIF::Discovery::IllegalValueError, m) unless valid
-        end
+        valid, m = Validate.id(self.id)
+        raise IIIF::Discovery::IllegalValueError, m unless valid
+        raise IIIF::Discovery::IllegalValueError, 'type must be Dataset' unless self['type'] == 'Dataset'
       end
 
       def to_ordered_hash(opts={})

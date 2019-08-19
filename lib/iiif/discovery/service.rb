@@ -69,38 +69,21 @@ module IIIF
         new_object = type.nil? ? default_klass.new : type.new
 
         hsh.keys.each do |key|
+          key = key.to_s
           new_key = key.underscore == key ? key : key.underscore
 
           if hsh[key].kind_of?(Hash)
-            new_object[new_key] = if new_object.type_only_keys.key?(new_key)
-                                    IIIF::Discovery::Service.from_ordered_hash(
-                                      hsh[key],
-                                      new_object.type_only_keys[new_key],
-                                      true
-                                    )
-                                  else
-                                    IIIF::Discovery::Service.from_ordered_hash(hsh[key])
-                                  end
-
+            new_object[new_key] = from_hash(new_object, new_key, hsh[key])
           elsif hsh[key].kind_of?(Array)
             new_object[new_key] = []
             hsh[key].each do |member|
               if member.kind_of?(Hash)
-                new_object[new_key] << if new_object.type_only_keys.key?(new_key)
-                                         IIIF::Discovery::Service.from_ordered_hash(
-                                           member,
-                                           new_object.type_only_keys[new_key],
-                                           true
-                                         )
-                                       else
-                                         IIIF::Discovery::Service.from_ordered_hash(member)
-                                       end
+                new_object[new_key] << from_hash(new_object, new_key, member)
               else
                 new_object[new_key] << member
                 # Again, no nested arrays, right?
               end
             end
-
           else
             new_object[new_key] = hsh[key]
           end
@@ -110,14 +93,38 @@ module IIIF
 
       protected
 
+      def self.from_hash(new_object, new_key, value)
+        if new_object.type_only_keys.key?(new_key)
+          IIIF::Discovery::Service.from_ordered_hash(
+                                      value,
+                                      new_object.type_only_keys[new_key],
+                                      true
+          )
+        else
+          IIIF::Discovery::Service.from_ordered_hash(value)
+        end
+      end
+
       def define_methods_for_type_only_keys
         type_only_keys.keys.each do |key|
+          next if array_only_keys.include? key
+
           # Setters
           define_singleton_method("#{key}=") do |arg|
+            unless arg.kind_of?(type_only_keys[key])
+              m = "#{key} must be an #{type_only_keys[key]}."
+              raise IIIF::Discovery::IllegalValueError, m
+            end
+
             self.send('[]=', key, arg)
           end
           if key.camelize(:lower) != key
             define_singleton_method("#{key.camelize(:lower)}=") do |arg|
+              unless arg.kind_of?(type_only_keys[key])
+                m = "#{key} must be an #{type_only_keys[key]}."
+                raise IIIF::Discovery::IllegalValueError, m
+              end
+
               self.send('[]=', key, arg)
             end
           end
@@ -141,6 +148,12 @@ module IIIF
               m = "#{key} must be an Array."
               raise IIIF::Discovery::IllegalValueError, m
             end
+
+            if type_only_keys.key?(key) && arg.any?{ |a| !a.kind_of?(type_only_keys[key]) }
+                m = "#{key} must be an Array of #{type_only_keys[key]}."
+                raise IIIF::Discovery::IllegalValueError, m
+            end
+
             self.send('[]=', key, arg)
           end
           if key.camelize(:lower) != key
@@ -149,6 +162,12 @@ module IIIF
                 m = "#{key} must be an Array."
                 raise IIIF::Discovery::IllegalValueError, m
               end
+
+              if type_only_keys.key?(key) && arg.any?{ |a| !a.kind_of?(type_only_keys[key]) }
+                m = "#{key} must be an Array of #{type_only_keys[key]}."
+                raise IIIF::Discovery::IllegalValueError, m
+              end
+
               self.send('[]=', key, arg)
             end
           end

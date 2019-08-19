@@ -93,8 +93,7 @@ puts obj.first.class
 
 ## Validation and Exceptions
 
-This is work in progress. Right now exceptions are generally raised when you
-try to set something to a type it should never be:
+Exceptions are raised when you try to set something to a type it should never be:
 
 ```ruby
 collection = IIIF::Discovery::OrderedCollection.new

@@ -22,12 +22,4 @@ describe IIIF::Discovery::Object do
     describe "#{described_class}.define_methods_for_array_only_keys" do
       it_behaves_like 'it has the appropriate methods for array-only keys'
     end
-
-    describe "#{described_class}.define_methods_for_hash_only_keys" do
-      it_behaves_like 'it has the appropriate methods for hash-only keys'
-    end
-
-    describe "#{described_class}.define_methods_for_any_type_keys" do
-      it_behaves_like 'it has the appropriate methods for any-type keys'
-    end
   end
