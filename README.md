@@ -83,12 +83,12 @@ seed = '{
   }
 }'
 
-obj = IIIF::Service.parse(seed) # can also be a file path or a Hash
+obj = IIIF::Discovery::Service.parse(seed) # can also be a file path or a Hash
 puts obj.class
 puts obj.first.class
 
 > IIIF::Discovery::OrderedCollection
-> IIIF::OrderedHash
+> IIIF::Discovery::Page
 ```
 
 ## Validation and Exceptions
